@@ -72,10 +72,17 @@ onclick="submitForm()">Submit</button>
 </div>
 
 <script>
-function submitForm() {
-const message =
-document.getElementById("message").value;
-alert("Message Submitted: " +message);
+const params = new
+  URLSearchParams(window.location.search);
+  const design = params.get("design");
+
+  if(design){
+    document.querySelector("img").src = "cake" + design + ".jpg";
+  }
+  function submitForm() {
+    const message =
+      document.getElementById("message").value;
+    alert("Design: " + design + "\nMessage: " + message);
 }
 </script>
 
