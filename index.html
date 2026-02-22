@@ -5,33 +5,49 @@
   <style>
     body {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       min-height: 100vh;
-      background-color: #fff;
+      background-color: #ffccd5; /* pink background */
       font-family: Arial, sans-serif;
+      margin: 0;
     }
 
+    /* Cardboard style container */
+    #cakeContainer {
+      background-color: #ffffff; /* white cardboard */
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2); /* subtle shadow for 3D effect */
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+    }
+
+    /* Cake image style */
     #cakeImage {
-      max-width: 80%;
+      max-width: 100%;
       height: auto;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* shadow to appear floating above cardboard */
+      border-radius: 8px;
     }
 
+    /* Textbox style */
     #message {
-      padding: 10px;
-      width: 300px;
+      padding: 12px;
+      width: 100%;
       font-size: 16px;
       border-radius: 8px;
       border: 2px solid #ff69b4;
-      background-color: #ffe6f0; /* light pink */
+      background-color: #ffe6f0; /* light pink textbox */
       text-align: center;
       margin-bottom: 10px;
     }
 
+    /* Submit button style */
     #submitBtn {
-      padding: 10px 20px;
+      padding: 12px 24px;
       font-size: 16px;
       border: none;
       border-radius: 8px;
@@ -43,18 +59,36 @@
     #submitBtn:hover {
       background-color: #ff3399;
     }
+
+    /* Responsive for mobile */
+    @media screen and (max-width: 480px) {
+      #cakeContainer {
+        padding: 20px;
+      }
+
+      #message {
+        font-size: 14px;
+      }
+
+      #submitBtn {
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
 <body>
 
-<!-- Cake image -->
-<img id="cakeImage" src="https://via.placeholder.com/400x300.png?text=Loading..." alt="Cake Design">
+<div id="cakeContainer">
+  <!-- Cake image -->
+  <img id="cakeImage" src="https://via.placeholder.com/400x300.png?text=Loading..." alt="Cake Design">
 
-<!-- Textbox -->
-<input type="text" id="message" placeholder="Type your message">
+  <!-- Textbox -->
+  <input type="text" id="message" placeholder="Type your message">
 
-<!-- Submit button -->
-<button id="submitBtn" onclick="submitForm()">Submit</button>
+  <!-- Submit button -->
+  <button id="submitBtn" onclick="submitForm()">Submit</button>
+</div>
 
 <script>
 function submitForm() {
@@ -71,7 +105,9 @@ function submitForm() {
     const design = params.get("design") || 1;
 
     // Send to Web App
-    fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {  // <-- Palitan ng Web App URL mo
+    fetch("script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec
+
+", {
         method: "POST",
         body: JSON.stringify({ design: design, message: message })
     })
@@ -83,17 +119,15 @@ function submitForm() {
     .catch(err => alert("Error: " + err));
 }
 
-// Load cake image dynamically based on QR code design
+// Load cake image dynamically based on design
 window.onload = function() {
     const params = new URLSearchParams(window.location.search);
     const design = params.get("design") || 1;
 
-    // Palitan ng GitHub Pages URLs mo para sa cake images
+    // Replace with your GitHub Pages URLs
     document.getElementById("cakeImage").src = `https://virtus000.github.io/cake-decorating-system/cake${design}.png`;
 };
 </script>
 
 </body>
 </html>
-
-
