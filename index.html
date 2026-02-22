@@ -73,19 +73,15 @@ placeholder="Enter message">
 </div>
 
 <script>
-  const params = new
-      URLSearchParams(window.location.search);
-  const design = params.get("design");
-  1-6
-
   function submitForm() {
     const message =
       document.getElementById("message").value
       ;
+
     const params = new
       URLSearchParams(window.location.search);
-    const design =
-      params.get("design");
+  const design = params.get("design");
+  1-6
     
     fetch("https://script.google.com/macros/s/AKfycbxHn5JU2XWyl4lrc-4248QpL0YTWsuEjykfypqWeggO80fOF9ktmqt6urMHAb_uXFDb/exec", 
           {
