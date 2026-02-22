@@ -29,7 +29,7 @@ function submitForm() {
     const design = params.get("design") || 1;
 
     // I-send sa Web App
-    fetch(https://script.google.com/macros/s/AKfycbxHn5JU2XWyl4lrc-4248QpL0YTWsuEjykfypqWeggO80fOF9ktmqt6urMHAb_uXFDb/exec", {  // <-- palitan ng Web App URL mo
+    fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {  // <-- palitan ng Web App URL mo
         method: "POST",
         body: JSON.stringify({ design: design, message: message }),
     })
