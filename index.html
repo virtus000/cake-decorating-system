@@ -105,9 +105,8 @@ function submitForm() {
     const design = params.get("design") || 1;
 
     // Send to Web App
-    fetch("script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec
-
-", {
+    fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", 
+          {
         method: "POST",
         body: JSON.stringify({ design: design, message: message })
     })
@@ -125,7 +124,7 @@ window.onload = function() {
     const design = params.get("design") || 1;
 
     // Replace with your GitHub Pages URLs
-    document.getElementById("cakeImage").src = `https://virtus000.github.io/cake-decorating-system/images/cake${design}.png`;
+    document.getElementById("cakeImage").src = `https://virtus000.github.io/cake-decorating-system/cake${design}.png`;
 };
 </script>
 
