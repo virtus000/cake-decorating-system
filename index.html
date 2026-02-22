@@ -9,7 +9,7 @@
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background-color: #fff; /* pwede palitan kung may pattern background ka */
+      background-color: #fff;
       font-family: Arial, sans-serif;
     }
 
@@ -48,10 +48,10 @@
 <body>
 
 <!-- Cake image -->
-<img id="cakeImage" src="https://via.placeholder.com/400x300.png?text=loading..." alt="Cake Design">
+<img id="cakeImage" src="https://via.placeholder.com/400x300.png?text=Loading..." alt="Cake Design">
 
 <!-- Textbox -->
-<input type="text" id="message" placeholder="Enter your message">
+<input type="text" id="message" placeholder="Type your message">
 
 <!-- Submit button -->
 <button id="submitBtn" onclick="submitForm()">Submit</button>
@@ -71,7 +71,7 @@ function submitForm() {
     const design = params.get("design") || 1;
 
     // Send to Web App
-    fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {  // <-- Palitan ng Web App URL mo
         method: "POST",
         body: JSON.stringify({ design: design, message: message })
     })
@@ -83,13 +83,13 @@ function submitForm() {
     .catch(err => alert("Error: " + err));
 }
 
-// Load cake image dynamically
+// Load cake image dynamically based on QR code design
 window.onload = function() {
     const params = new URLSearchParams(window.location.search);
     const design = params.get("design") || 1;
 
-    // Replace with your GitHub Pages URLs
-    document.getElementById("cakeImage").src = `https://virtus000.github.io/cake-decorating-system/main/cake1%20(1)%20(1).png`;
+    // Palitan ng GitHub Pages URLs mo para sa cake images
+    document.getElementById("cakeImage").src = `https://virtus000.github.io/cake-decorating-system/cake${design}.png`;
 };
 </script>
 
