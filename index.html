@@ -1,99 +1,52 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Cake Design Selection</title>
-<meta name="viewport"
-content="width=device-width,
-initial-scale=1.0">
-
-<style>
-body {
-front-family: 'Segoe UI', sans-serif;
-background: linear-gradient(to right, #ffdde1, #ee9ca7);
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-margin: 0;
-}
-
-.container {
-background: white;
-padding: 30px;
-border-radius: 15px;
-box-shadow: 0 10px 25px
-rgba(0,0,0,0.2);
-width: 350px
-text-align: center;
-}
-
-img {
-width: 100%;
-border-radius: 10px;
-margin-bottom: 15px;
-}
-
-input {
-width: 100%;
-padding: 10px;
-margin-top: 10px;
-border-radius: 8px;
-border: 1px solid #ccc;
-}
-
-button {
-margin-top: 15px;
-width: 100%;
-padding: 12px;
-border: none;
-background: #ff6b81;
-color: white;
-font-size: 16px;
-border-radius: 8px;
-cursor: pointer;
-}
-
-button:hover {
-background: #ff4757;
-}
-</style>
+  <title>Cake Decorating System</title>
 </head>
-
 <body>
-<div class="container">
-<h2>Selected Cake Design</h2>
-<img id="cakeImage"
-  src="https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake1%20(1)%20(1).png" alt="Cake Design" width="300">
 
-<input type="text" id="message"
-placeholder="Enter message">
-  
+<!-- Cake image, magbabago depende sa query string ?design=1–6 -->
+<img id="cakeImage" src="https://via.placeholder.com/300x200.png?text=Cake+Placeholder" alt="Cake Design" width="300">
+
+<!-- Textbox para sa message -->
+<input type="text" id="message" placeholder="Type your message here">
+
+<!-- Submit button -->
 <button onclick="submitForm()">Submit</button>
-</div>
 
 <script>
-  function submitForm() {
-    const message =
-      document.getElementById("message").value
-      ;
+function submitForm() {
+    const messageBox = document.getElementById("message"); // kunin input element
+    const message = messageBox.value; // kunin text
 
-    const params = new
-      URLSearchParams(window.location.search);
-  const design = params.get("design");
-  1-6
-    
-    fetch("https://script.google.com/macros/s/AKfycbxHn5JU2XWyl4lrc-4248QpL0YTWsuEjykfypqWeggO80fOF9ktmqt6urMHAb_uXFDb/exec", 
-          {
-      method: "POST",
-      body: JSON.stringify({ design:
-        design, message: mesage }),
+    if (!message) { // simple validation
+        alert("Please type a message!");
+        return;
+    }
+
+    // Kunin design number mula sa query string
+    const params = new URLSearchParams(window.location.search);
+    const design = params.get("design") || 1;
+
+    // I-send sa Web App
+    fetch("https://script.google.com/macros/s/AKfycbxHn5JU2XWyl4lrc-4248QpL0YTWsuEjykfypqWeggO80fOF9ktmqt6urMHAb_uXFDb/exec", {  // <-- palitan ng Web App URL mo
+        method: "POST",
+        body: JSON.stringify({ design: design, message: message }),
     })
     .then(response => response.text())
-    .then(data => alert("Submitted!"))
-    .catch(err => alert("Error: " + 
-                        err));
-  }
+    .then(data => {
+        alert("Submitted successfully!");
+        messageBox.value = ""; // clear textbox after submit
+    })
+    .catch(err => alert("Error: " + err));
+}
+
+// Optional: auto-load cake image depende sa query string
+window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    const design = params.get("design") || 1;
+    document.getElementById("cakeImage").src = `https://github.com/virtus000/cake-decorating-system/blob/main/cake1%20(1)%20(1).png`;
+};
 </script>
 
 </body>
