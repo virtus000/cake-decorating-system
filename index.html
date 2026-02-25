@@ -24,6 +24,9 @@
       width: 90%;
       box-sizing: border-box;
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     #cakeImage {
@@ -44,7 +47,6 @@
       background-color: #ffe6f0;
       text-align: center;
       margin-bottom: 15px;
-      display: block;
       transition: opacity 0.5s ease;
     }
 
@@ -61,19 +63,23 @@
       transition: all 0.5s ease;
       position: relative;
       z-index: 2;
+      width: auto;
+      max-width: 100%;
     }
 
     #cancelBtn {
-      padding: 12px 24px;
+      padding: 12px 0;
       font-size: 16px;
       border: none;
       border-radius: 8px;
-      background-color: #ff3399;
+      background-color: #ff4d4d;
       color: white;
       cursor: pointer;
       margin-top: 15px;
       display: none;
       opacity: 0;
+      width: 70%; /* habaan */
+      text-align: center;
       transition: opacity 0.5s ease;
     }
 
@@ -89,7 +95,7 @@
     @media screen and (max-width: 480px) {
       #cakeContainer { padding: 20px; }
       #message { font-size: 16px; }
-      #submitBtn, #cancelBtn { padding: 10px 20px; font-size: 14px; }
+      #submitBtn, #cancelBtn { padding: 10px 20px; font-size: 14px; width: 80%; }
     }
   </style>
 </head>
@@ -99,11 +105,11 @@
   <img id="cakeImage" src="" alt="Cake Design">
   <input type="text" id="message" placeholder="Type your message">
   <button id="submitBtn" onclick="submitForm()">Submit</button>
-  <button id="cancelBtn" onclick="resetForm()">Cancel</button>
+  <button id="cancelBtn" onclick="resetForm()">Abort</button>
 </div>
 
 <script>
-let design = "cake1"; // global design variable
+let design = "cake1"; 
 
 // Load cake design
 window.onload = function() {
@@ -129,37 +135,36 @@ function submitForm() {
   const messageInput = document.getElementById("message");
   const btn = document.getElementById("submitBtn");
   const cancelBtn = document.getElementById("cancelBtn");
-
   const message = messageInput.value;
+
   if(!message) { alert("Please enter a message"); return; }
 
   // Send to Google Apps Script
   fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {
     method: "POST",
     body: JSON.stringify({ message: message, design: design })
-  })
-  .then(res => res.text())
-  .then(data => {
-    // Animate button to replace textbox
-    messageInput.style.opacity = 0;
-    btn.style.transition = "all 0.5s ease";
-    btn.style.width = messageInput.offsetWidth + "px";
-    btn.style.height = messageInput.offsetHeight + "px";
-    btn.style.marginBottom = "0px";
-    btn.textContent = "Submitted Successfully!";
+  }).then(res => res.text())
+    .then(data => {
+      // Fade out textbox
+      messageInput.style.opacity = 0;
 
-    // Move button up to replace textbox
-    btn.style.transform = "translateY(-"+(messageInput.offsetHeight + 15)+"px)";
+      // Resize button to match textbox width
+      btn.style.width = "100%";
+      btn.style.height = messageInput.offsetHeight + "px";
+      btn.textContent = "Submitted Successfully!";
 
-    // After animation, show cancel button
-    setTimeout(() => {
-      cancelBtn.style.display = "block";
-      cancelBtn.classList.add("fade-in");
-    }, 500);
+      // Move button to textbox position
+      btn.style.transform = "translateY(-" + (messageInput.offsetHeight + 15) + "px)";
 
-    messageInput.value = "";
-  })
-  .catch(err => { alert("Submission failed"); console.error(err); });
+      // After animation, show cancel/abort button
+      setTimeout(() => {
+        cancelBtn.style.display = "block";
+        cancelBtn.classList.add("fade-in");
+      }, 500);
+
+      messageInput.value = "";
+    })
+    .catch(err => { alert("Submission failed"); console.error(err); });
 }
 
 // Reset form
@@ -171,16 +176,18 @@ function resetForm() {
   // Reset button
   btn.textContent = "Submit";
   btn.style.transform = "translateY(0px)";
-  btn.style.width = "";
-  btn.style.height = "";
-  btn.style.marginBottom = "15px";
+  btn.style.width = "auto";
+  btn.style.height = "auto";
 
   // Show message box again
   messageInput.style.opacity = 1;
 
   // Hide cancel button
   cancelBtn.style.opacity = 0;
-  setTimeout(() => { cancelBtn.style.display = "none"; cancelBtn.classList.remove("fade-in"); }, 500);
+  setTimeout(() => {
+    cancelBtn.style.display = "none";
+    cancelBtn.classList.remove("fade-in");
+  }, 500);
 }
 </script>
 
