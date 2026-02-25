@@ -1,55 +1,165 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Slide Up Fade In Message</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    padding: 50px;
-    text-align: center;
-  }
+  <title>Cake Decorating System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #ffccd5;
+      font-family: Arial, sans-serif;
+      margin: 0;
+    }
 
-  #submitBtn {
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-  }
+    #cakeContainer {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 450px;
+      width: 90%;
+      box-sizing: border-box;
+    }
 
-  #message {
-    margin-top: 20px;
-    font-size: 20px;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
+    #cakeImage {
+      width: 100%;
+      height: auto;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-  #message.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-</style>
+    #message {
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 2px solid #ff69b4;
+      background-color: #ffe6f0;
+      text-align: center;
+      margin: 0 auto 10px auto;
+      display: block;
+      box-sizing: border-box;
+    }
+
+    #submitBtn {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #ff69b4;
+      color: white;
+      cursor: pointer;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #submitBtn:hover {
+      background-color: #ff3399;
+    }
+
+    .success-message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px 20px;
+      background-color: #ff69b4;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .success-message.show {
+      display: block;
+      animation: slideFadeIn 0.5s ease forwards;
+    }
+
+    @keyframes slideFadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @media screen and (max-width: 480px) {
+      #cakeContainer { padding: 20px; }
+      #message { font-size: 16px; }
+      #submitBtn { padding: 10px 20px; font-size: 14px; }
+    }
+  </style>
 </head>
 <body>
 
-<button id="submitBtn">Submit</button>
-
-<div id="message" class="hidden">cake decorating machine says</div>
+<div id="cakeContainer">
+  <img id="cakeImage" src="" alt="Cake Design">
+  <input type="text" id="message" placeholder="Type your message">
+  <button id="submitBtn" onclick="submitForm()">Submit</button>
+  <div id="successBox" class="success-message">
+    Cake Decorating Machine Says: Submitted Successfully!
+  </div>
+</div>
 
 <script>
-  const submitBtn = document.getElementById('submitBtn');
-  const message = document.getElementById('message');
+window.onload = function() {
+  const params = new URLSearchParams(window.location.search);
+  const design = params.get("design");
+  const cakeImage = document.getElementById("cakeImage");
 
-  submitBtn.addEventListener('click', () => {
-    // Show message with slide-up + fade-in
-    message.classList.add('show');
+  const designs = {
+    cake1: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake1.png",
+    cake2: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake2.png",
+    cake3: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake3.png"
+  };
 
-    // After 1 second, change text to "Submitted Successfully!"
+  cakeImage.src = designs[design] || designs["cake1"];
+};
+
+function submitForm() {
+  const message = document.getElementById("message").value;
+  if (!message) { alert("Please enter a message"); return; }
+
+  const successBox = document.getElementById("successBox");
+
+  // Show popup with animation
+  successBox.classList.add("show");
+
+  fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {
+    method: "POST",
+    body: JSON.stringify({ message: message })
+  })
+  .then(res => res.text())
+  .then(data => {
+    document.getElementById("message").value = "";
+
+    // Keep popup 2 seconds then fade out
     setTimeout(() => {
-      message.textContent = 'Submitted Successfully!';
-    }, 1000);
+      successBox.style.opacity = "0";
+      successBox.style.transform = "translateY(-20px)";
+      setTimeout(() => { 
+        successBox.classList.remove("show");
+        successBox.style.display = "none";
+      }, 500); 
+    }, 2000); // 2 seconds visible
+  })
+  .catch(error => {
+    alert("Submission failed");
+    console.error(error);
+    successBox.style.opacity = "0";
+    successBox.style.transform = "translateY(-20px)";
+    setTimeout(() => { 
+      successBox.classList.remove("show");
+      successBox.style.display = "none";
+    }, 500);
   });
+}
 </script>
 
 </body>
