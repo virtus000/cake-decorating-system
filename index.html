@@ -2,50 +2,47 @@
 <html>
 <head>
   <title>Cake Decorating System</title>
+
   <style>
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      background-color: #ffccd5; /* pink background */
+      background-color: #ffccd5;
       font-family: Arial, sans-serif;
       margin: 0;
     }
 
-    /* Cardboard style container */
     #cakeContainer {
-      background-color: #ffffff; /* white cardboard */
+      background-color: #ffffff;
       padding: 30px;
       border-radius: 12px;
-      box-shadow: 0 12px 25px rgba(0,0,0,0.2); /* subtle shadow for 3D effect */
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
       text-align: center;
       max-width: 450px;
       width: 90%;
     }
 
-    /* Cake image style */
     #cakeImage {
       max-width: 100%;
       height: auto;
       margin-bottom: 20px;
-      box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* shadow to appear floating above cardboard */
       border-radius: 8px;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.15);
     }
 
-    /* Textbox style */
     #message {
       padding: 12px;
       width: 100%;
       font-size: 16px;
       border-radius: 8px;
       border: 2px solid #ff69b4;
-      background-color: #ffe6f0; /* light pink textbox */
+      background-color: #ffe6f0;
       text-align: center;
       margin-bottom: 10px;
     }
 
-    /* Submit button style */
     #submitBtn {
       padding: 12px 24px;
       font-size: 16px;
@@ -60,77 +57,83 @@
       background-color: #ff3399;
     }
 
-    /* Responsive for mobile */
+    .success-message {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+    }
+
     @media screen and (max-width: 480px) {
       #cakeContainer {
         padding: 20px;
       }
-
       #message {
         font-size: 14px;
       }
-
       #submitBtn {
         padding: 10px 20px;
         font-size: 14px;
       }
     }
-
-    /* Success Notification */
-.success-message {
-  display: none;
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 8px;
-  font-weight: bold;
-  text-align: center;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideDown {
-  from { transform: translate(-50%, -50px); opacity: 0; }
-  to { transform: translate(-50%, 0); opacity: 1; }
-}
-
-/* Spinner */
-.spinner {
-  width: 18px;
-  height: 18px;
-  border: 3px solid white;
-  border-top: 3px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
   </style>
 </head>
+
 <body>
 
 <div id="cakeContainer">
-  <!-- Cake image -->
-  <img id="cakeImage" src="virtus000/cake-decorating-system" alt="Cake Design">
 
-  <!-- Textbox -->
+  <!-- Dynamic Cake Image -->
+  <img id="cakeImage" src="" alt="Cake Design">
+
+  <!-- Message Input -->
   <input type="text" id="message" placeholder="Type your message">
 
-  <!-- Submit button -->
+  <!-- Submit Button -->
   <button id="submitBtn" onclick="submitForm()">Submit</button>
 
-<div id="successBox" class="success-message">
-  Cake Decorating Machine Says Submitted Successfully
+  <!-- Success Box -->
+  <div id="successBox" class="success-message">
+    Cake Decorating Machine Says: Submitted Successfully!
+  </div>
+
 </div>
 
-  <script>
+<script>
+
+//////////////////////////////
+// 🎂 QR DESIGN LOADER
+//////////////////////////////
+
+window.onload = function() {
+
+  const params = new URLSearchParams(window.location.search);
+  const design = params.get("design");
+
+  const cakeImage = document.getElementById("cakeImage");
+
+  const designs = {
+    cake1: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake1.jpg",
+    cake2: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake2.jpg",
+    cake3: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake3.jpg"
+  };
+
+  if (designs[design]) {
+    cakeImage.src = designs[design];
+  } else {
+    cakeImage.src = designs["cake1"]; // default image
+  }
+
+};
+
+//////////////////////////////
+// 📩 SUBMIT TO GOOGLE SHEETS
+//////////////////////////////
+
 function submitForm() {
 
   const message = document.getElementById("message").value;
@@ -147,22 +150,24 @@ function submitForm() {
   .then(res => res.text())
   .then(data => {
 
-    // ✅ SHOW SUCCESS BOX
-   const successBox = document.getElementById("successBox");
+    const successBox = document.getElementById("successBox");
+    successBox.style.display = "block";
 
-  successBox.style.display = "block";
+    setTimeout(() => {
+      successBox.style.display = "none";
+    }, 3000);
 
-  setTimeout(() => {
-    successBox.style.display = "none";
-  }, 3000);
+    document.getElementById("message").value = "";
 
-  document.getElementById("message").value = "";
+  })
+  .catch(error => {
+    alert("Submission failed");
+    console.error(error);
+  });
+
 }
+
 </script>
 
-  <div class="success-box" id="successBox">
-  <div class="spinner"></div>
-  Cake Decorating Machine Says: Submitted Successfully!
-</div>
 </body>
 </html>
