@@ -85,7 +85,7 @@
     }
 
     .success-message.hide {
-      animation: slideFadeOut 0.5s forwards;
+      animation: slideFadeOut 1s forwards;
     }
 
     @keyframes slideFadeIn {
@@ -158,7 +158,7 @@ function submitForm() {
   .then(data => {
     document.getElementById("message").value = "";
 
-    // Keep popup 2 seconds then fade out
+    // Keep popup 1 second then fade out
     setTimeout(() => {
       successBox.classList.remove("show");
       successBox.classList.add("hide");
@@ -168,7 +168,7 @@ function submitForm() {
         successBox.classList.remove("hide");
         successBox.removeEventListener("animationend", handler);
       });
-    }, 2000); // 2 seconds visible
+    }, 1000); // 1 second visible
   })
   .catch(error => {
     alert("Submission failed");
