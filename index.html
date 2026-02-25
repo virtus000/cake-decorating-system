@@ -2,7 +2,6 @@
 <html>
 <head>
   <title>Cake Decorating System</title>
-
   <style>
     body {
       display: flex;
@@ -57,36 +56,51 @@
       background-color: #ff3399;
     }
 
+    /* Success message with spinner and animation */
     .success-message {
       display: none;
       margin-top: 10px;
       padding: 10px;
-      background-color: #4CAF50;
+      background-color: #ff69b4; /* pink */
       color: white;
       border-radius: 8px;
       font-weight: bold;
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      animation: slideFade 0.5s ease forwards;
+    }
+
+    .spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid white;
+      border-top: 3px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes slideFade {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
 
     @media screen and (max-width: 480px) {
-      #cakeContainer {
-        padding: 20px;
-      }
-      #message {
-        font-size: 14px;
-      }
-      #submitBtn {
-        padding: 10px 20px;
-        font-size: 14px;
-      }
+      #cakeContainer { padding: 20px; }
+      #message { font-size: 14px; }
+      #submitBtn { padding: 10px 20px; font-size: 14px; }
     }
   </style>
 </head>
-
 <body>
 
 <div id="cakeContainer">
-
   <!-- Dynamic Cake Image -->
   <img id="cakeImage" src="" alt="Cake Design">
 
@@ -96,24 +110,20 @@
   <!-- Submit Button -->
   <button id="submitBtn" onclick="submitForm()">Submit</button>
 
-  <!-- Success Box -->
+  <!-- Success Box with Spinner -->
   <div id="successBox" class="success-message">
+    <div class="spinner"></div>
     Cake Decorating Machine Says: Submitted Successfully!
   </div>
-
 </div>
 
 <script>
-
 //////////////////////////////
 // 🎂 QR DESIGN LOADER
 //////////////////////////////
-
 window.onload = function() {
-
   const params = new URLSearchParams(window.location.search);
   const design = params.get("design");
-
   const cakeImage = document.getElementById("cakeImage");
 
   const designs = {
@@ -127,21 +137,19 @@ window.onload = function() {
   } else {
     cakeImage.src = designs["cake1"]; // default image
   }
-
 };
 
 //////////////////////////////
 // 📩 SUBMIT TO GOOGLE SHEETS
 //////////////////////////////
-
 function submitForm() {
-
   const message = document.getElementById("message").value;
+  if (!message) { alert("Please enter a message"); return; }
 
-  if (!message) {
-    alert("Please enter a message");
-    return;
-  }
+  const successBox = document.getElementById("successBox");
+
+  // SHOW spinner + message first
+  successBox.style.display = "flex";
 
   fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {
     method: "POST",
@@ -149,25 +157,19 @@ function submitForm() {
   })
   .then(res => res.text())
   .then(data => {
+    document.getElementById("message").value = "";
 
-    const successBox = document.getElementById("successBox");
-    successBox.style.display = "block";
-
+    // Keep success box visible for 3s then hide
     setTimeout(() => {
       successBox.style.display = "none";
     }, 3000);
-
-    document.getElementById("message").value = "";
-
   })
   .catch(error => {
     alert("Submission failed");
     console.error(error);
+    successBox.style.display = "none";
   });
-
 }
-
 </script>
-
 </body>
 </html>
