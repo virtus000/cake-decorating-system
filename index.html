@@ -75,6 +75,63 @@
         font-size: 14px;
       }
     }
+
+    /* Success Notification */
+.success-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff69b4;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 15px;
+  font-weight: bold;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  display: none;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.5s ease;
+  z-index: 9999;
+}
+
+    /* Success Notification */
+.success-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff69b4;
+  color: white;
+  padding: 15px 25px;
+  border-radius: 15px;
+  font-weight: bold;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  display: none;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.5s ease;
+  z-index: 9999;
+}
+
+@keyframes slideDown {
+  from { transform: translate(-50%, -50px); opacity: 0; }
+  to { transform: translate(-50%, 0); opacity: 1; }
+}
+
+/* Spinner */
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid white;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
   </style>
 </head>
 <body>
@@ -90,43 +147,44 @@
   <button id="submitBtn" onclick="submitForm()">Submit</button>
 </div>
 
-<script>
+  <script>
 function submitForm() {
-    const messageBox = document.getElementById("message");
-    const message = messageBox.value;
 
-    if(!message) {
-        alert("Please type a message!");
-        return;
-    }
+  const message = document.getElementById("message").value;
 
-    // Get design number from URL query string (QR code)
-    const params = new URLSearchParams(window.location.search);
-    const design = params.get("design") || 1;
+  if (!message) {
+    alert("Please enter a message");
+    return;
+  }
 
-    // Send to Web App
-    fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", 
-          {
-        method: "POST",
-        body: JSON.stringify({ design: design, message: message })
-    })
-    .then(res => res.text())
-    .then(data => {
-        alert("Submitted successfully!");
-        messageBox.value = "";
-    })
-    .catch(err => alert("Error: " + err));
+  fetch("YOUR_WEB_APP_URL_HERE", {
+    method: "POST",
+    body: JSON.stringify({ message: message })
+  })
+  .then(res => res.text())
+  .then(data => {
+
+    // ✅ SHOW SUCCESS BOX
+    document.getElementById("successBox").style.display = "flex";
+
+    setTimeout(() => {
+      document.getElementById("successBox").style.display = "none";
+    }, 3000);
+
+    // ✅ AUTO CLEAR INPUT
+    document.getElementById("message").value = "";
+
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+
 }
-
-// Load cake image dynamically based on design
-window.onload = function() {
-    const params = new URLSearchParams(window.location.search);
-    const design = params.get("design") || 1;
-
-    // Replace with your GitHub Pages URLs
-    document.getElementById("cakeImage").src = `https://virtus000.github.io/cake-decorating-system/cake${design}.png`;
-};
 </script>
 
+  <div class="success-box" id="successBox">
+  <div class="spinner"></div>
+  🎂 Cake Decorating Machine Says: Submitted Successfully!
+</div>
 </body>
 </html>
