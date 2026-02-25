@@ -112,14 +112,18 @@
   <input type="text" id="message" placeholder="Type your message">
   <button id="submitBtn" onclick="submitForm()">Submit</button>
   <div id="successBox" class="success-message">
-    Submitted Successfully!
+    Cake Decorating Machine Says: Submitted Successfully!
   </div>
 </div>
 
 <script>
 window.onload = function() {
   const params = new URLSearchParams(window.location.search);
-  const design = params.get("design");
+  let design = params.get("design");
+  
+  // sanitize input
+  design = design ? design.trim().toLowerCase() : "cake1";
+
   const cakeImage = document.getElementById("cakeImage");
 
   // Correct raw GitHub URLs for all 6 cake images
