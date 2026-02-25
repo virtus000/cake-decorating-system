@@ -26,9 +26,9 @@
     }
 
     #cakeImage {
-      width: 100%;           
-      max-height: 50vh;      
-      object-fit: contain;   
+      width: 100%;
+      max-height: 50vh;
+      object-fit: contain;
       margin-bottom: 20px;
       border-radius: 8px;
       box-shadow: 0 8px 15px rgba(0,0,0,0.15);
@@ -66,7 +66,6 @@
       background-color: #ff3399;
     }
 
-    /* Popup animations */
     .success-message {
       display: none;
       margin-top: 15px;
@@ -86,7 +85,7 @@
     }
 
     .success-message.hide {
-      animation: slideFadeOut 1s forwards;
+      animation: slideFadeOut 0.5s forwards;
     }
 
     @keyframes slideFadeIn {
@@ -113,7 +112,7 @@
   <input type="text" id="message" placeholder="Type your message">
   <button id="submitBtn" onclick="submitForm()">Submit</button>
   <div id="successBox" class="success-message">
-    Submitted Successfully!
+    Cake Decorating Machine Says: Submitted Successfully!
   </div>
 </div>
 
@@ -123,12 +122,17 @@ window.onload = function() {
   const design = params.get("design");
   const cakeImage = document.getElementById("cakeImage");
 
+  // Correct raw GitHub URLs for all 6 cake images
   const designs = {
-    cake1: "https://githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake1.png",
-    cake2: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake2.png",
-    cake3: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake3.png"
+    cake1: "https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake1.png",
+    cake2: "https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake2.png",
+    cake3: "https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake3.png",
+    cake4: "https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake4.png",
+    cake5: "https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake5.png",
+    cake6: "https://raw.githubusercontent.com/virtus000/cake-decorating-system/main/cake6.png"
   };
 
+  // Load design or default to cake1
   cakeImage.src = designs[design] || designs["cake1"];
 };
 
