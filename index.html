@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Cake Decorating System</title>
-  <!-- Prevent mobile zoom on input -->
+  <!-- Prevent mobile zoom -->
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <style>
     body {
@@ -23,25 +23,31 @@
       text-align: center;
       max-width: 450px;
       width: 90%;
+      box-sizing: border-box;
     }
 
     #cakeImage {
-      max-width: 100%;
+      width: 100%; /* responsive */
       height: auto;
       margin-bottom: 20px;
       border-radius: 8px;
       box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     #message {
       padding: 12px;
-      width: 100%;
-      font-size: 16px; /* ≥16px to prevent mobile zoom */
+      width: 100%; /* full width inside container */
+      font-size: 16px; /* prevent mobile zoom */
       border-radius: 8px;
       border: 2px solid #ff69b4;
       background-color: #ffe6f0;
       text-align: center;
-      margin-bottom: 10px;
+      margin: 0 auto 10px auto;
+      display: block;
+      box-sizing: border-box;
     }
 
     #submitBtn {
@@ -52,34 +58,32 @@
       background-color: #ff69b4;
       color: white;
       cursor: pointer;
+      display: block;
+      margin: 0 auto;
     }
 
     #submitBtn:hover {
       background-color: #ff3399;
     }
 
-    /* Success message popup with animation */
+    /* Success popup with smooth fade in/out */
     .success-message {
       display: none;
-      margin-top: 10px;
+      margin-top: 15px;
       padding: 12px 20px;
-      background-color: #ff69b4; /* pink */
+      background-color: #ff69b4;
       color: white;
       border-radius: 8px;
       font-weight: bold;
       text-align: center;
-      animation: slideFade 0.5s ease forwards;
-    }
-
-    @keyframes slideFade {
-      0% { opacity: 0; transform: translateY(-20px); }
-      50% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-20px); }
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
 
     @media screen and (max-width: 480px) {
       #cakeContainer { padding: 20px; }
-      #message { font-size: 16px; } /* maintain 16px */
+      #message { font-size: 16px; }
       #submitBtn { padding: 10px 20px; font-size: 14px; }
     }
   </style>
@@ -87,7 +91,7 @@
 <body>
 
 <div id="cakeContainer">
-  <!-- Dynamic Cake Image -->
+  <!-- Cake Image -->
   <img id="cakeImage" src="" alt="Cake Design">
 
   <!-- Message Input -->
@@ -104,35 +108,36 @@
 
 <script>
 //////////////////////////////
-// 🎂 QR DESIGN LOADER
+// QR DESIGN LOADER
 //////////////////////////////
 window.onload = function() {
   const params = new URLSearchParams(window.location.search);
   const design = params.get("design");
   const cakeImage = document.getElementById("cakeImage");
 
+  // RAW GitHub links for PNG images
   const designs = {
     cake1: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake1.png",
     cake2: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake2.png",
     cake3: "https://raw.githubusercontent.com/virtus000/virtus000-cake-decorating-system/main/cake3.png"
   };
 
-  if (designs[design]) {
-    cakeImage.src = designs[design];
-  } else {
-    cakeImage.src = designs["cake1"]; // default image
-  }
+  cakeImage.src = designs[design] || designs["cake1"]; // default
 };
 
 //////////////////////////////
-// 📩 SUBMIT TO GOOGLE SHEETS
+// SUBMIT TO GOOGLE SHEETS
 //////////////////////////////
 function submitForm() {
   const message = document.getElementById("message").value;
   if (!message) { alert("Please enter a message"); return; }
 
   const successBox = document.getElementById("successBox");
+
+  // Show popup
   successBox.style.display = "block";
+  successBox.style.opacity = "1";
+  successBox.style.transform = "translateY(0)";
 
   fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {
     method: "POST",
@@ -142,15 +147,19 @@ function submitForm() {
   .then(data => {
     document.getElementById("message").value = "";
 
-    // Keep popup visible for 3s then hide
+    // Hide after 3 seconds smoothly
     setTimeout(() => {
-      successBox.style.display = "none";
+      successBox.style.opacity = "0";
+      successBox.style.transform = "translateY(-20px)";
+      setTimeout(() => { successBox.style.display = "none"; }, 500);
     }, 3000);
   })
   .catch(error => {
     alert("Submission failed");
     console.error(error);
-    successBox.style.display = "none";
+    successBox.style.opacity = "0";
+    successBox.style.transform = "translateY(-20px)";
+    setTimeout(() => { successBox.style.display = "none"; }, 500);
   });
 }
 </script>
