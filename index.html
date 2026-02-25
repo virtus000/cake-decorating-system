@@ -26,8 +26,9 @@
     }
 
     #cakeImage {
-      width: 100%;
-      height: auto;
+      width: 100%;           
+      max-height: 50vh;      
+      object-fit: contain;   
       margin-bottom: 20px;
       border-radius: 8px;
       box-shadow: 0 8px 15px rgba(0,0,0,0.15);
@@ -65,6 +66,7 @@
       background-color: #ff3399;
     }
 
+    /* Popup animations */
     .success-message {
       display: none;
       margin-top: 15px;
@@ -76,17 +78,25 @@
       text-align: center;
       opacity: 0;
       transform: translateY(-20px);
-      transition: opacity 1.5s ease, transform 1.5s ease;
     }
 
     .success-message.show {
       display: block;
-      animation: slideFadeIn 1.5s ease forwards;
+      animation: slideFadeIn 0.5s forwards;
+    }
+
+    .success-message.hide {
+      animation: slideFadeOut 0.5s forwards;
     }
 
     @keyframes slideFadeIn {
       0% { opacity: 0; transform: translateY(-20px); }
       100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideFadeOut {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-20px); }
     }
 
     @media screen and (max-width: 480px) {
@@ -103,7 +113,7 @@
   <input type="text" id="message" placeholder="Type your message">
   <button id="submitBtn" onclick="submitForm()">Submit</button>
   <div id="successBox" class="success-message">
-    Submitted Successfully!
+    Cake Decorating Machine Says: Submitted Successfully!
   </div>
 </div>
 
@@ -128,7 +138,8 @@ function submitForm() {
 
   const successBox = document.getElementById("successBox");
 
-  // Show popup with animation
+  // Show popup
+  successBox.classList.remove("hide");
   successBox.classList.add("show");
 
   fetch("https://script.google.com/macros/s/AKfycbzsa8NiL7sAxnTTCSLRh2C6bF5LfimD9fMkwnIps2hzZFnt2WCmkpl-mV1L7H5SiWg/exec", {
@@ -141,23 +152,19 @@ function submitForm() {
 
     // Keep popup 2 seconds then fade out
     setTimeout(() => {
-      successBox.style.opacity = "0";
-      successBox.style.transform = "translateY(-20px)";
-      setTimeout(() => { 
-        successBox.classList.remove("show");
+      successBox.classList.remove("show");
+      successBox.classList.add("hide");
+
+      successBox.addEventListener("animationend", function handler() {
         successBox.style.display = "none";
-      }, 500); 
-    }, 1000); // 2 seconds visible
+        successBox.classList.remove("hide");
+        successBox.removeEventListener("animationend", handler);
+      });
+    }, 2000); // 2 seconds visible
   })
   .catch(error => {
     alert("Submission failed");
     console.error(error);
-    successBox.style.opacity = "0";
-    successBox.style.transform = "translateY(-20px)";
-    setTimeout(() => { 
-      successBox.classList.remove("show");
-      successBox.style.display = "none";
-    }, 500);
   });
 }
 </script>
