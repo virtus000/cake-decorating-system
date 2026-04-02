@@ -156,12 +156,6 @@ function submitForm() {
       // Move button to textbox position
       btn.style.transform = "translateY(-" + (messageInput.offsetHeight + 15) + "px)";
 
-      // After animation, show cancel/abort button
-      setTimeout(() => {
-        cancelBtn.style.display = "block";
-        cancelBtn.classList.add("fade-in");
-      }, 500);
-
       messageInput.value = "";
     })
     .catch(err => { alert("Submission failed"); console.error(err); });
@@ -171,7 +165,6 @@ function submitForm() {
 function resetForm() {
   const messageInput = document.getElementById("message");
   const btn = document.getElementById("submitBtn");
-  const cancelBtn = document.getElementById("cancelBtn");
 
   // Reset button
   btn.textContent = "Submit";
@@ -182,12 +175,7 @@ function resetForm() {
   // Show message box again
   messageInput.style.opacity = 1;
 
-  // Hide cancel button
-  cancelBtn.style.opacity = 0;
-  setTimeout(() => {
-    cancelBtn.style.display = "none";
-    cancelBtn.classList.remove("fade-in");
-  }, 500);
+ 
 }
 </script>
 
